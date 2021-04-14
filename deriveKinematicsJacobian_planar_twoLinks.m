@@ -3,7 +3,7 @@ function [r, v, j_theta] = deriveKinematicsJacobian_planar_twoLinks()
 %the horizontal plane with lengths l1 and l2
 
 
-syms th1 th2 th1dot th2dot l1 l2
+syms th1 th2 th1dot th2dot l1 l2 real
 % in the above, th are absolute/inertial angles
 
 r1 = l1/2;
@@ -32,4 +32,5 @@ omega = [th1dot; th2dot];
 %jacobian wrt omega generalized coordinates
 j_theta = jacobian(v,omega);
 
+end
 
