@@ -1,5 +1,5 @@
 function [inertia_matrix] = deriveInertiaMat_generalizedCoord(jacob, massMatrix)
 
-inertia_matrix = simplify( jacob'*massMatrix*jacob );
+inertia_matrix = ( jacob'*massMatrix*jacob );
 
 end
