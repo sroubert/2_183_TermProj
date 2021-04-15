@@ -41,3 +41,7 @@ d_dt_delL_qdot = jacobian(delL_qdot, [q_vec, qdot_vec])*[qdot_vec, qdotdot_vec]'
 E_L_equ = d_dt_delL_qdot - delL_q - torque';
 
 equationsThDotDot = solve(E_L_equ, qdotdot_vec); %solve equations of motion
+
+
+matlabFunction(equationsThDotDot.th1dotdot,'file','ddtheta1Lag'); 
+matlabFunction(equationsThDotDot.th2dotdot,'file','ddtheta2Lag'); 
