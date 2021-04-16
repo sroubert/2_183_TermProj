@@ -25,7 +25,7 @@ theta1dot_OL = statearray(:,3); theta2dot_OL = statearray(:,4);
 
 
 %integration function using Lagrange
-    function stateArmDot = RHS(t,z,p)
+    function stateArmDot = RHS(t,z,p) %xdot = Ax + Bu
        %unpacking struct
        l1 = p.l1; l2 = p.l2; m1 = p.m1; m2 = p.m2;
 

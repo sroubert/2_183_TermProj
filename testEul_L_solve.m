@@ -13,7 +13,8 @@ qdotdot_vec = [th1dotdot th2dotdot];
 
 torque = [tau1, tau2];
 
-[r_test, v_test, j_theta_test] = deriveKinematicsJacobian_planar_twoLinks();
+[r_test, v_test, j_theta_test, j_theta_hand_test, j_theta_handInv_test] = ...
+    deriveKinematicsJacobian_planar_twoLinks();
 
 massMat= deriveMassMatrix_planar_twoLinks();
 
@@ -38,7 +39,7 @@ delL_qdot = jacobian(L,qdot_vec)';
 
 d_dt_delL_qdot = jacobian(delL_qdot, [q_vec, qdot_vec])*[qdot_vec, qdotdot_vec]';
 
-E_L_equ = d_dt_delL_qdot - delL_q - torque';
+E_L_equ = (d_dt_delL_qdot - delL_q - torque' == 0);
 
 equationsThDotDot = solve(E_L_equ, qdotdot_vec); %solve equations of motion
 
