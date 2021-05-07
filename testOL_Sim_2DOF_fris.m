@@ -3,10 +3,11 @@ param.m1 = 1;
 param.m2 = 2;
 param.Ic1 = 1;
 param.Ic2 = 2;
+
 param.l1 = 1;
 param.l2 = 2;
-param.tau1 = 5;
-param.tau2 = 10;
+param.tau1 = 1;
+param.tau2 = 5;
 param.th1_0 = 0;
 param.th2_0 = pi/4;
 param.th1dot_0 = 0;
@@ -25,13 +26,15 @@ xlabel('time (sec)')
 
 subplot(2,2,2)
 plot(tarray,theta2_OL)
-title('theta1dot')
+title('theta2')
 xlabel('time (sec)')
 
 subplot(2,2,3)
-plot(tarray,thet21dot_OL)
-title('theta1')
+plot(tarray,theta1dot_OL)
+title('theta1dot')
 xlabel('time (sec)')
 
 subplot(2,2,4)
 plot(tarray,theta2dot_OL)
+title('theta2dot')
+xlabel('time (sec)')

@@ -1,4 +1,4 @@
-function [M_matrix] = deriveMassMatrix_planar_twoLinks()
+function [M_matrix] = deriveMassMatrix_planar_twoLinks(m1, Ic1, m2)
 
 syms m1 Ic1 m2 Ic2 real
 
