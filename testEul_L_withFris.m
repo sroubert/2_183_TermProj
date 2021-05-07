@@ -2,10 +2,11 @@ close all
 clear all
 %script for equations of motion
 
+
 syms th1 th2 th1dot th2dot th1dotdot th2dotdot real
 syms tau1 tau2 real
 syms l1 l2 rfris real
-s
+syms thFrisOrient real
 syms m1 Ic1 m2 Ic2 mfris Ifris real
 
 q_vec = [th1, th2];
@@ -15,9 +16,12 @@ qdotdot_vec = [th1dotdot th2dotdot];
 torque = [tau1, tau2];
 
 [r_test, v_test, j_theta_test, j_theta_hand_test, j_theta_handInv_test] = ...
-    deriveKinematicsJacobian_planar_twoLinks();
+    deriveKinematicsJacobian_planar_twoDOF_Fris(th1, th2, th1dot, th2dot, ...
+    thFrisOrient, l1, l2, rfris, m1, m2, mfris);
 
-massMat= deriveMassMatrix_planar_twoLinks();
+massMat= deriveMassMatrix_planar_twoDOF_fris(m1, Ic1, m2, Ic2,...
+    l1, l2, ...
+    mfris, Ifris, rfris, thFrisOrient);
 
 inertMat = deriveInertiaMat_generalizedCoord(j_theta_test, massMat);
 
@@ -45,5 +49,5 @@ E_L_equ = (d_dt_delL_qdot - delL_q - torque' == 0);
 equationsThDotDot = solve(E_L_equ, qdotdot_vec); %solve equations of motion
 
 
-matlabFunction(equationsThDotDot.th1dotdot,'file','ddtheta1Lag'); 
-matlabFunction(equationsThDotDot.th2dotdot,'file','ddtheta2Lag'); 
+matlabFunction(equationsThDotDot.th1dotdot,'file','ddtheta1_2DOF_fris_Lag'); 
+matlabFunction(equationsThDotDot.th2dotdot,'file','ddtheta2_2DOF_fris_Lag'); 

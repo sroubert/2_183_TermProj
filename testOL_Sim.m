@@ -4,6 +4,7 @@ param.m1 = 1;
 param.m2 = 2;
 param.Ic1 = 1;
 param.Ic2 = 2;
+
 param.l1 = 1;
 param.l2 = 2;
 param.th1dot_0 = 0;
