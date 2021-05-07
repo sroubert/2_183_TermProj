@@ -1,8 +1,12 @@
-function [tarray, theta1_OL, theta2_OL, theta1dot_OL, theta2dot_OL] = openLoopSim(p, time_total)
+function [tarray, theta1_OL, theta2_OL, theta1dot_OL, theta2dot_OL] = openLoopSim()
 %assumes p is a structure containing the parameters of mass, 
 %centroidal inertias, lengths, and initial states, ie angles and omegas
 %for this also has constant torques
 
+global param;
+p = param;
+
+time_total = p.time_total;
 
 framessec=60; 
 tspan=linspace(0,time_total,time_total*framessec);
@@ -43,16 +47,16 @@ tau1Norm = interp1(tau1Array(:,1),tau1Array(:,2),tspan);
 tau2Norm = interp1(tau2Array(:,1),tau2Array(:,2),tspan);
 
 %plot joint torques in their own window
-figure();
-subplot(2,1,1)
-plot(tarray,tau1Norm,'LineWidth',2);
-xlabel('Time (s)')
-ylabel('Joint 1 Torque (N-m)')
-subplot(2,1,2)
-plot(tarray,tau2Norm,'LineWidth',2);
-xlabel('Time (s)')
-ylabel('Joint 2 Torque (N-m)')
-sgtitle('Joint Torques')
+% figure();
+% subplot(2,1,1)
+% plot(tarray,tau1Norm,'LineWidth',2);
+% xlabel('Time (s)')
+% ylabel('Joint 1 Torque (N-m)')
+% subplot(2,1,2)
+% plot(tarray,tau2Norm,'LineWidth',2);
+% xlabel('Time (s)')
+% ylabel('Joint 2 Torque (N-m)')
+% sgtitle('Joint Torques')
 
 %integration function using Lagrange
     function stateArmDot = RHS(t,z,p) %xdot = Ax + Bu
