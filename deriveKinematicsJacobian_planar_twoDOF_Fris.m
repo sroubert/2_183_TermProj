@@ -17,9 +17,9 @@ r2 = l2/2;
 i = [1 0 ]';
 j = [0 1 ]';
 
-%unit vectors of frisbee body frame wrt 2nd link frame
-e_rf = [cos(thfOrient) sin(thfOrient)]';
-e_nf = [-sin(thfOrient) cos(thfOrient)]';
+%unit vectors of frisbee body frame wrt inertial frame
+e_rf = [cos(thfOrient + th2) sin(thfOrient + th2)]';
+e_nf = [-sin(thfOrient + th2) cos(thfOrient + th2)]';
 
 %position vectors
 rc1 = r1*cos(th1)*i + r1*sin(th1)*j;
