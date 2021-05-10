@@ -5,7 +5,7 @@ function [r, v, j_theta, j_theta_handEnd, j_theta_handEnd_inv, ...
 %the following function derives the kinematics for three-link mechanism with 
 %a frisbee constrained to the mechanism end-point at a given orientaiton,
 %thOrient. thOrient is described as a CCW rotation wrt axis along the
-%forearm (2nd link)
+%forearm (3td link)
 
 
 % syms th1 th2 th1dot th2dot l1 l2 real
