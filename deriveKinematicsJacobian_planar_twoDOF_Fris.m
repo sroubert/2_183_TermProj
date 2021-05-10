@@ -1,4 +1,5 @@
-function [r, v, j_theta, j_theta_handEnd, j_theta_handEnd_inv] = ...
+function [r, v, j_theta, j_theta_handEnd, j_theta_handEnd_inv, ...
+    handEndVel, v_frisCOM_inertial] = ...
     deriveKinematicsJacobian_planar_twoDOF_Fris(th1, th2, th1dot, th2dot, thfOrient, ...
     l1, l2, rfris, m1, m2, mfris)
 %the following function derives the kinematics for two-link mechanism with 
@@ -60,7 +61,7 @@ j_theta_handEnd = jacobian(handEndVel,omega);
 
 j_theta_handEnd_inv = simplify( pinv(j_theta_handEnd) );
 
-
+v_frisCOM_inertial = jacobian(frisCOM_inertial ,[th1 th2])*omega;
 
 end
 
