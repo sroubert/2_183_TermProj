@@ -1,7 +1,6 @@
 % optimize
 
 function fmin = optimize()
-% previously [optParam, optTime] = optimize()
     
     global param
     
@@ -18,9 +17,9 @@ function fmin = optimize()
     
     % Set optimization bounds
     tauMin1 = 0;
-    tauMax1 = 5;
+    tauMax1 = 0.5;
     tauMin2 = 0;
-    tauMax2 = 5;
+    tauMax2 = 0.5;
     thStartMin1 = 0;
     thStartMax1 = pi;
     thStartMin2 = 0;

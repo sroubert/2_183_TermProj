@@ -1,18 +1,27 @@
-global param;
+close all;
+clear all;
 
-param.m1 = 1;
-param.m2 = 2;
-param.Ic1 = 1;
-param.Ic2 = 2;
+global param evalCount;
+evalCount = 0;      % Count how many optimization evaluations were run
 
-param.l1 = 1;
-param.l2 = 2;
+% Using Neville's estimates for limb segment lengths & masses (from
+% "Multi-Joint Inertial Dynamics" reading
+param.m1 = 2.52;
+param.m2 = 1.30;
+param.l1 = 0.33;
+param.l2 = 0.32;
+param.Ic1 = 1/12*param.m1*param.l1^2;   % Define moments of inertia based on arm as thin rod
+param.Ic2 = 1/12*param.m2*param.l2^2;
 param.th1dot_0 = 0;
 param.th2dot_0 = 0;
-param.maxVelGoal = 10;
+
+% Set goals for frisbee behavior (linear velocity, direction, and spin)
+param.velGoal = 5;          % Desired maximum frisbee linear velocity
+param.angGoal = pi/2;       % Desired frisbee direction at max. velocity
+param.spinGoal = 0;         % Desired frisbee spin at max. velocity
 
 % Choose whether to run an optimization or manually select values
-runOptimization = false;
+runOptimization = true;
 
 if runOptimization
     % Runs optimization with given physical parameters and desired behavior.
@@ -21,13 +30,14 @@ if runOptimization
     % Optimization bounds and settings are set in optimize.m function.
     fmin = optimize();
 
-    % Display optimal parameters
-    param
-    fmin
+    % Display results of optimization
+    param   % Optimal parameters
+    fmin    % Minimum objective function value
+    evalCount   % Number of optimization evaluations
 else
     % Manually assign parameters for simulation
-    param.tau1 = 5;
-    param.tau2 = 5;
+    param.tau1 = 0.5;
+    param.tau2 = 0.5;
     param.th1_0 = 0;
     param.th2_0 = 0;
     param.time_total = 5;
@@ -47,27 +57,36 @@ thetaDotMat = [theta1dot_OL, theta2dot_OL];
 velMag = sqrt(xdot.^2 + ydot.^2);
 velAng = atan2(ydot,xdot);
 
+% Return achieved frisbee behavior
+[maxVel, maxVelIndex] = max(velMag)
+maxVelAng = velAng(maxVelIndex)
+
 % Display optimal trajectory in joint angles
 figure
 subplot(2,2,1)
-plot(tarray,theta1_OL)
-title('theta1')
+plot(tarray,rad2deg(theta1_OL))
+title('theta_{1}')
 xlabel('time (sec)')
+ylabel('theta1 (deg)')
 
 subplot(2,2,2)
-plot(tarray,theta2_OL)
-title('theta2')
+plot(tarray,rad2deg(theta2_OL))
+title('theta_{2}')
 xlabel('time (sec)')
+ylabel('theta2 (deg)')
 
 subplot(2,2,3)
-plot(tarray,theta1dot_OL)
-title('theta1dot')
+plot(tarray,rad2deg(theta1dot_OL))
+title('theta_{1} dot')
 xlabel('time (sec)')
+ylabel('theta1dot (deg/s)')
+
 
 subplot(2,2,4)
-plot(tarray,theta2dot_OL)
-title('theta2dot')
+plot(tarray,rad2deg(theta2dot_OL))
+title('theta_{2} dot')
 xlabel('time (sec)')
+ylabel('theta2dot (deg/s)')
 
 % Display optimal trajectory in Cartesian coordinates
 figure
