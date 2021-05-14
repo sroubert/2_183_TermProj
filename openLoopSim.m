@@ -33,6 +33,7 @@ if control == "hand position"
     xF=[param.xf, param.yf];
     dt=time_total/100;
     [x,v,a,t]=getMinJerk(x0,xF,time_total,dt); %min jerk trj
+    param.dt=dt;
     param.x=x;
     param.v=v;
     param.t=t;

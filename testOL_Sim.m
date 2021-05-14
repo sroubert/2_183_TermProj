@@ -149,4 +149,4 @@ subplot(3,2,6)
 polarplot(velAng,velMag)
 title('Velocity Trajectory')
 
-plot_trj_2D(param.dt,)
+plot_trj_2D(param.dt,theta1_OL,theta2_OL,param)
