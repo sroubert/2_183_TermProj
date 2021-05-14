@@ -4,22 +4,21 @@ function [tarray, theta1_OL, theta2_OL, theta1dot_OL, theta2dot_OL] = openLoopSi
 %for this also has constant torques
 
 global param;
-p = param;
 
-time_total = p.time_total;
+time_total = param.time_total;
 
 framessec=60; 
 tspan=linspace(0,time_total,time_total*framessec);
 
 %choose type of torque input and number of DOFs for torque input function
-% type = "equal and opposite";
-type = "constant";
+type = "equal and opposite";
+% type = "constant";
 DOF = 2;
 
-%unpack initial states from p
-th1_0 = p.th1_0; th2_0 = p.th2_0;
+%unpack initial states from param
+th1_0 = param.th1_0; th2_0 = param.th2_0;
 
-th1dot_0 = p.th1dot_0; th2dot_0 = p.th2dot_0;
+th1dot_0 = param.th1dot_0; th2dot_0 = param.th2dot_0;
 
 %initial state array
 
@@ -31,7 +30,7 @@ options = odeset('RelTol', 1e-10, 'AbsTol', 1e-10);
 tau1Array = zeros(1,2);
 tau2Array = zeros(1,2);
 
-[tarray, statearray] = ode45(@RHS, tspan, state0, options, p);
+[tarray, statearray] = ode45(@RHS, tspan, state0, options);
 
 theta1_OL = statearray(:,1); theta2_OL = statearray(:,2);
 theta1dot_OL = statearray(:,3); theta2dot_OL = statearray(:,4);
@@ -59,16 +58,23 @@ tau2Norm = interp1(tau2Array(:,1),tau2Array(:,2),tspan);
 % sgtitle('Joint Torques')
 
 %integration function using Lagrange
-    function stateArmDot = RHS(t,z,p) %xdot = Ax + Bu
-       %unpacking struct
-       l1 = p.l1; l2 = p.l2; m1 = p.m1; m2 = p.m2;
+    function stateArmDot = RHS(t,z) %xdot = Ax + Bu
+        %unpacking struct
+        l1 = param.l1; l2 = param.l2; m1 = param.m1; m2 = param.m2;
 
-        Ic1 = p.Ic1; Ic2 = p.Ic2; 
+        Ic1 = param.Ic1; Ic2 = param.Ic2; 
 
-        tauMag = [p.tau1, p.tau2];
+        if DOF == 2
+            tauMag = [param.tau1, param.tau2];
+        elseif DOF == 3
+            tauMag = [param.tau1, param.tau2, param.tau3];
+        end
         
-        tau = torqueInput(tauMag,t,time_total,type,DOF);
+        minJerkParams = [param.xi, param.yi, param.xf, param.yf];
 
+
+        tau = torqueInput(tauMag,minJerkParams,t,time_total,type,DOF);
+            
         tau1 = tau(1);
         tau2 = tau(2);
         

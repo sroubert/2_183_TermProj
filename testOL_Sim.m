@@ -1,7 +1,7 @@
 close all;
 clear all;
 
-global param evalCount;
+global param control evalCount;
 evalCount = 0;      % Count how many optimization evaluations were run
 
 % Using Neville's estimates for limb segment lengths & masses (from
@@ -19,6 +19,21 @@ param.th2dot_0 = 0;
 param.velGoal = 5;          % Desired maximum frisbee linear velocity
 param.angGoal = pi/2;       % Desired frisbee direction at max. velocity
 param.spinGoal = 0;         % Desired frisbee spin at max. velocity
+
+% Choose type of control (uncomment desired choice)
+control = "torque";
+% control = "hand space";
+
+% Intitialize parameters that will be used by objective function to zero
+param.tau1 = 0;
+param.tau2 = 0;
+param.th1_0 = 0;
+param.th2_0 = 0;  
+param.xi = 0;
+param.yi = 0;
+param.xf = 0;
+param.yf = 0;
+param.time_total = 0;
 
 % Choose whether to run an optimization or manually select values
 runOptimization = true;

@@ -1,16 +1,28 @@
 function [val, gradient] = objFunc(x)
 
-    global param evalCount;
+    global param control evalCount;
 
     evalCount = evalCount + 1
     
-    % Parameters: x = [tau1, tau2, initial theta1, initial theta2, time duration]    
-    param.tau1 = x(1);
-    param.tau2 = x(2);
-    param.th1_0 = x(3);
-    param.th2_0 = x(4);
-    param.time_total = x(5);
-
+    if control == "torque"
+        % Torque control
+        % Parameters: x = [tau1, tau2, initial theta1, initial theta2, time duration]    
+        param.tau1 = x(1);
+        param.tau2 = x(2);
+        param.th1_0 = x(3);
+        param.th2_0 = x(4);
+        param.time_total = x(5);
+    
+    elseif control == "hand position"
+        % Cartesian position control
+        % Parameters: x = [xi, yi, xf, yf, time duration]
+        param.xi = x(1);
+        param.yi = x(2);
+        param.xf = x(3);
+        param.yf = x(4);
+        param.time_total = x(5);
+    end
+        
     % Simulate throw using chosen parameters
     [tarray, theta1_OL, theta2_OL, theta1dot_OL, theta2dot_OL] = openLoopSim();
 
