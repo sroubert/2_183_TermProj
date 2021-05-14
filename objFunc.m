@@ -39,9 +39,12 @@ function [val, gradient] = objFunc(x)
 
         [handX, handY, handXdot, handYdot] =...
             forwardKinematics(thetaMat, thetaDotMat, param);
-
+        if (any(imag(handXdot)~=0) || any(imag(handYdot)~=0))
+            val=10000;
+            return;
+        end
         % Obtain maximum velocity and its index
-        [maxVel, maxVelIndex] = max(sqrt(handXdot.^2 + handYdot.^2));
+        [maxVel, maxVelIndex] = max(sqrt(handXdot.^2 + handYdot.^2))
         
         % Obtain frisbee direction at time of max. velocity
         maxVelAng = atan2(handYdot(maxVelIndex),handXdot(maxVelIndex));

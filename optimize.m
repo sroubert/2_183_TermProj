@@ -5,7 +5,7 @@ function fmin = optimize()
     global param control
     
     % Maximum number of evaluations before stopping the algorithm
-    opt.maxeval = 10;
+    opt.maxeval = 100;
     
     % Relative stopping tolerance (e.g., xtol_rel = .01 means the
     % optimization will stop when a step changes all parameters by less
@@ -24,8 +24,19 @@ function fmin = optimize()
     thStartMax1 = pi;
     thStartMin2 = 0;
     thStartMax2 = pi;
-    timeTotalMin = 1;
-    timeTotalMax = 10;
+    timeTotalMin = 0.01;
+    timeTotalMax = 5;
+    
+    % chosen somewhat arbitrarily
+    xiMin=-.45;
+    yiMin=0;
+    xfMin=-.45;
+    yfMin=0;
+    xiMax=.45;
+    yiMax=0.45;
+    xfMax=0.45;
+    yfMax=0.45;
+    
     
     % Parameter bounds
     if control == "torque"
@@ -38,6 +49,7 @@ function fmin = optimize()
         % Cartesian position control
         % Parameters: [Initial position (x & y), , time duration]
         opt.lower_bounds = [xiMin, yiMin, xfMin, yfMin, timeTotalMin];
+
         opt.upper_bounds = [xiMax, yiMax, xfMax, yfMax, timeTotalMax];
     end
         

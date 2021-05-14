@@ -17,12 +17,12 @@ param.th2dot_0 = 0;
 
 % Set goals for frisbee behavior (linear velocity, direction, and spin)
 param.velGoal = 5;          % Desired maximum frisbee linear velocity
-param.angGoal = pi/2;       % Desired frisbee direction at max. velocity
+param.angGoal = pi/4;       % Desired frisbee direction at max. velocity
 param.spinGoal = 0;         % Desired frisbee spin at max. velocity
 
 % Choose type of control (uncomment desired choice)
-control = "torque";
-% control = "hand space";
+%control = "torque";
+ control = "hand position";
 
 % Intitialize parameters that will be used by objective function to zero
 param.tau1 = 0;
@@ -34,6 +34,12 @@ param.yi = 0;
 param.xf = 0;
 param.yf = 0;
 param.time_total = 0;
+
+param.dof=2;
+
+param.K=[29.5,14.3;14.3,39.3]*2;
+
+param.B=param.K*.1;
 
 % Choose whether to run an optimization or manually select values
 runOptimization = true;
@@ -107,12 +113,16 @@ ylabel('theta2dot (deg/s)')
 figure
 subplot(3,2,1)
 plot(tarray,x)
+hold on
+plot(param.t,param.x(:,1),'r--')
 title('Hand x-coordinates')
 xlabel('time (sec)')
 ylabel('x (m)')
 
 subplot(3,2,2)
 plot(tarray,y)
+hold on
+plot(param.t,param.x(:,2),'r--')
 title('Hand y-coordinates')
 xlabel('time (sec)')
 ylabel('y (m)')
@@ -138,3 +148,5 @@ ylabel('v (m/s)')
 subplot(3,2,6)
 polarplot(velAng,velMag)
 title('Velocity Trajectory')
+
+plot_trj_2D(param.dt,)
