@@ -52,8 +52,8 @@ if runOptimization
     fmin = optimize();
 
     % Display results of optimization
-    param   % Optimal parameters
-    fmin    % Minimum objective function value
+    param       % Optimal parameters
+    fmin        % Minimum objective function value
     evalCount   % Number of optimization evaluations
 else
     % Manually assign parameters for simulation

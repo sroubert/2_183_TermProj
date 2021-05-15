@@ -83,3 +83,8 @@ function fmin = optimize()
     param.time_total = xopt(5);
     
     % Cartesian position control
+    param.xi = xopt(1);
+    param.yi = xopt(2);
+    param.xf = xopt(3);
+    param.yf = xopt(4);
+    param.time_total = xopt(5);

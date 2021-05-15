@@ -44,7 +44,7 @@ function [val, gradient] = objFunc(x)
             return;
         end
         % Obtain maximum velocity and its index
-        [maxVel, maxVelIndex] = max(sqrt(handXdot.^2 + handYdot.^2))
+        [maxVel, maxVelIndex] = max(sqrt(handXdot.^2 + handYdot.^2));
         
         % Obtain frisbee direction at time of max. velocity
         maxVelAng = atan2(handYdot(maxVelIndex),handXdot(maxVelIndex));
