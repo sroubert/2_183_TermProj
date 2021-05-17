@@ -13,7 +13,7 @@ tspan=linspace(0,time_total,time_total*framessec);
 %choose type of torque input and number of DOFs for torque input function
 type = "equal and opposite";
 % type = "constant";
-DOF = 2;
+%DOF = 2;
 
 %unpack initial states from param
 %th1_0 = param.th1_0; th2_0 = param.th2_0;
@@ -41,9 +41,16 @@ if control == "hand position"
     
     th1_0=param.thd(1,1);
     th2_0=param.thd(1,2);
+    if param.dof==3
+       th3_0=param.thd(1,3); 
+       th3dot_0=0
+    end
 end
-
+if param.dof==2
 state0 = [th1_0, th2_0, th1dot_0, th2dot_0];
+elseif param.dof==3
+    state0=[th1_0 th2_0 th3_0 th1dot_0 th2dot_0 th3dot_0];
+end
 
 [tarray, statearray] = ode45(@RHS, param.t, state0, options);
 
@@ -80,13 +87,13 @@ param.tau=[tau1Array,tau2Array];
 
         Ic1 = param.Ic1; Ic2 = param.Ic2; 
 
-        if DOF == 2
-            tauMag = [param.tau1, param.tau2];
-        elseif DOF == 3
-            tauMag = [param.tau1, param.tau2, param.tau3];
-        end
+        %if param.dof == 2
+            %tauMag = [param.tau1, param.tau2];
+        %elseif param.dof == 3
+            %tauMag = [param.tau1, param.tau2, param.tau3];
+        %end
         
-        minJerkParams = [param.xi, param.yi, param.xf, param.yf];
+        %minJerkParams = [param.xi, param.yi, param.xf, param.yf];
 
 
         %tau = torqueInput(tauMag,minJerkParams,t,time_total,type,DOF); two
