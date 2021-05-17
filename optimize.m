@@ -48,9 +48,15 @@ function fmin = optimize()
     elseif control == "hand position"
         % Cartesian position control
         % Parameters: [Initial position (x & y), , time duration]
-        opt.lower_bounds = [xiMin, yiMin, xfMin, yfMin, timeTotalMin];
+        if param.dof==2
+            opt.lower_bounds = [xiMin, yiMin, xfMin, yfMin, timeTotalMin];
 
-        opt.upper_bounds = [xiMax, yiMax, xfMax, yfMax, timeTotalMax];
+            opt.upper_bounds = [xiMax, yiMax, xfMax, yfMax, timeTotalMax];
+        elseif param.dof==3
+            opt.lower_bounds = [xiMin, yiMin, xfMin, yfMin, timeTotalMin, -pi/2,0,timeTotalMin];
+            opt.upper_bounds = [xiMax, yiMax, xfMax, yfMax, timeTotalMax, pi/4,timeTotalMax-timeTotalMin,timeTotalMax];
+
+        end
     end
         
     % Initial guess for first optimization evaluation
@@ -62,8 +68,14 @@ function fmin = optimize()
     
     elseif control == "hand position"
         % Cartesian position control
+        if param.dof==2
         init_guess = [(xiMax-xiMin)/2, (yiMax-yiMin)/2, (xfMax-xfMin)/2,...
             (yfMax-yfMin)/2, (timeTotalMax-timeTotalMin)/2];
+        elseif param.dof==3
+            init_guess = [(xiMax-xiMin)/2, (yiMax-yiMin)/2, (xfMax-xfMin)/2,...
+            (yfMax-yfMin)/2, (timeTotalMax-timeTotalMin)/2, ...
+            -pi/4, (timeTotalMax-timeTotalMin)/4,(timeTotalMax-timeTotalMin)/2]; %delta_th3, ti, T
+        end
     end
     
     % Set objective function handle
