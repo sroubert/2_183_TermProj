@@ -100,3 +100,8 @@ function fmin = optimize()
     param.xf = xopt(3);
     param.yf = xopt(4);
     param.time_total = xopt(5);
+    if param.dof==3
+       param.delta_th3=xopt(6);
+       param.hand_ti=xopt(7);
+       param.hand_T=xopt(8);
+    end
