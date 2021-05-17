@@ -21,6 +21,11 @@ function [val, gradient] = objFunc(x)
         param.xf = x(3);
         param.yf = x(4);
         param.time_total = x(5);
+        if param.dof==3
+            param.delta_th3=x(6); %distance traveled of wrist
+            param.hand_ti=x(7); %start time of wrist motion
+            param.hand_T=x(8); %total time for movement
+        end
     end
         
     % Simulate throw using chosen parameters
