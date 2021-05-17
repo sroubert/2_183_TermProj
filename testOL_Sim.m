@@ -16,9 +16,19 @@ param.th1dot_0 = 0;
 param.th2dot_0 = 0;
 
 % Set goals for frisbee behavior (linear velocity, direction, and spin)
-param.velGoal = 5;          % Desired maximum frisbee linear velocity
+param.velGoal = 10;          % Desired maximum frisbee linear velocity
 param.angGoal = pi/4;       % Desired frisbee direction at max. velocity
 param.spinGoal = 0;         % Desired frisbee spin at max. velocity
+
+% Choose what error optimization will try to minimize - velocity, angle,
+% spin, or some combination. Used by objFunc.m
+param.objective = "V";
+% param.objective = "A";
+% param.objective = "S";
+% param.objective = "VA";
+% param.objective = "VS";
+% param.objective = "AS";
+% param.objective = "VAS";
 
 % Choose type of control (uncomment desired choice)
 %control = "torque";
@@ -57,11 +67,19 @@ if runOptimization
     evalCount   % Number of optimization evaluations
 else
     % Manually assign parameters for simulation
-    param.tau1 = 0.5;
-    param.tau2 = 0.5;
-    param.th1_0 = 0;
-    param.th2_0 = 0;
-    param.time_total = 5;
+    if control == "torque"
+        param.tau1 = 0.5;
+        param.tau2 = 0.5;
+        param.th1_0 = 0;
+        param.th2_0 = 0;
+        param.time_total = 0.5;
+    elseif control == "hand position"
+        param.xi = -0.5;
+        param.yi = 0;
+        param.xf = 0.15;
+        param.yf = 0.3;
+        param.time_total = 0.5;
+    end
 end
 
 % Simulate trajectory using optimal parameters
