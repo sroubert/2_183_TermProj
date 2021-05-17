@@ -20,21 +20,33 @@ function [thetas]=getThetasFromXY(xy,v,a,t,params)
     end
     
     if DOF==3
+        th3_initial=pi/4; %relative coords
         l3=params.l3;
+        delta_th3=params.delta_th3;
+        ti=params.hand_ti;
+        t_tot=params.hand_T;
         th3=zeros(length(t),1);
-        %Sub-optimization :) 
-        switch type
-            case 'min-energy'
-                for i =1:length(t)
-                    W=M(i);%Mass Matrix to get energy (how to know mass matrix without knowing thetas?)
-                    %or W=Ito get angular velocity norm
-                    J=get_jacobian();%again, how to get jacobian when you don't know configuration
-                    %J_w_plus=inv(W) * J'*inv(J*inv(W)*J')
-                    %[th1(i);th2(i);th3(i)]=J_w_plus*xvel(i,:)';
-                end
-            case ''
+        theta_min_jerk=@(t,A,D) 6*A*(t/D)^5-15*A*(t/D)^4 +10*A*(t/D)^3;
+        
+        for i=1:length(t)%same approach as 2 dof
+            x=xy(i,1);
+            y=xy(i,2);
+            l3=sqrt(x^2+y^2);
+            th1(i)=atan2(y,x) - acos((l1^2+l3^2-l2^2)/(2*l1*l3));
+            th2(i)=th1(i)+pi-acos((l1^2+l2^2-l3^2)/(2*l1*l2));
             
-            case ''
+            %now do th3
+            tt=t(i);
+            if tt<ti %if submovement hasnt started yet, 
+                th3(i)= th2(i)+th3_initial; %absolute coords
+                continue
+            end
+            if tt>(ti+t_tot)
+                th3(i)=th2(i)+th3_initial + delta_th3; %if over time, keep same wrist angle;
+               continue 
+            end
+
+            th3(i)=th2(i)+th3_initial+theta_min_jerk(tt,delta_th3,t_tot);
         end
         thetas=[th1,th2,th3];
     end
