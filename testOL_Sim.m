@@ -52,7 +52,7 @@ param.K=[29.5,14.3;14.3,39.3]*2;
 param.B=param.K*.1;
 
 % Choose whether to run an optimization or manually select values
-runOptimization = false;
+runOptimization = true;
 
 if runOptimization
     % Runs optimization with given physical parameters and desired behavior.
