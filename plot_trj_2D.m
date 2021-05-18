@@ -15,8 +15,11 @@ function [] =plot_trj_2D(dt,th1s,th2s,params)
         axis equal
         drawnow
         pause(dt)
-        delete(tmp)
-        delete(tmp2)
+        
+        if k~=length(th1s)
+            delete(tmp)
+            delete(tmp2)
+        end
     end
 end
 

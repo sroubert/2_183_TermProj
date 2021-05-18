@@ -13,7 +13,7 @@ function fmin = optimize()
     opt.xtol_rel = 0.00001;
     
     % Choose optimization algorithm
-    opt.algorithm = NLOPT_GN_CRS2_LM;
+    opt.algorithm = param.algorithm;
     
     % Set optimization bounds
     tauMin1 = 0;
@@ -28,14 +28,24 @@ function fmin = optimize()
     timeTotalMax = 2;
     
     % chosen somewhat arbitrarily
-    xiMin=-.45;
-    yiMin=0;
-    xfMin=-.45;
-    yfMin=0;
-    xiMax=.45;
-    yiMax=0.45;
-    xfMax=0.45;
-    yfMax=0.45;
+%     xiMin=-.45;
+%     yiMin=0;
+%     xfMin=-.45;
+%     yfMin=0;
+%     xiMax=.45;
+%     yiMax=0.45;
+%     xfMax=0.45;
+%     yfMax=0.45;
+    
+    % Defines boundaries as +/- max reach in x, and [0, max reach] in y.
+    xiMin= -param.l1 - param.l2;
+    yiMin= 0;
+    xfMin= -param.l1 - param.l2;
+    yfMin= 0;
+    xiMax= param.l1 + param.l2;
+    yiMax= param.l1 + param.l2;
+    xfMax= param.l1 + param.l2;
+    yfMax= param.l1 + param.l2;
     
     
     % Parameter bounds
@@ -50,7 +60,6 @@ function fmin = optimize()
         % Parameters: [Initial position (x & y), , time duration]
         if param.dof==2
             opt.lower_bounds = [xiMin, yiMin, xfMin, yfMin, timeTotalMin];
-
             opt.upper_bounds = [xiMax, yiMax, xfMax, yfMax, timeTotalMax];
         elseif param.dof==3
             opt.lower_bounds = [xiMin, yiMin, xfMin, yfMin, timeTotalMin, -pi/2,0,timeTotalMin];
@@ -88,20 +97,23 @@ function fmin = optimize()
     
     % Assign optimal parameters to param structure
     % Torque control
-    param.tau1 = xopt(1);
-    param.tau2 = xopt(2);
-    param.th1_0 = xopt(3);
-    param.th2_0 = xopt(4);
-    param.time_total = xopt(5);
+    if control == "torque"
+        param.tau1 = xopt(1);
+        param.tau2 = xopt(2);
+        param.th1_0 = xopt(3);
+        param.th2_0 = xopt(4);
+        param.time_total = xopt(5);
     
-    % Cartesian position control
-    param.xi = xopt(1);
-    param.yi = xopt(2);
-    param.xf = xopt(3);
-    param.yf = xopt(4);
-    param.time_total = xopt(5);
-    if param.dof==3
-       param.delta_th3=xopt(6);
-       param.hand_ti=xopt(7);
-       param.hand_T=xopt(8);
+    elseif control == "hand position"
+        % Cartesian position control
+        param.xi = xopt(1);
+        param.yi = xopt(2);
+        param.xf = xopt(3);
+        param.yf = xopt(4);
+        param.time_total = xopt(5);
+        if param.dof==3
+           param.delta_th3=xopt(6);
+           param.hand_ti=xopt(7);
+           param.hand_T=xopt(8);
+        end
     end

@@ -6,6 +6,9 @@ evalCount = 0;      % Count how many optimization evaluations were run
 
 param.maxEvals=100;
 
+param.algorithm = NLOPT_GN_DIRECT_L;
+% param.algorithm = NLOPT_GN_CRS2_LM;
+
 % Using Neville's estimates for limb segment lengths & masses (from
 % "Multi-Joint Inertial Dynamics" reading
 param.m1 = 2.52;
@@ -34,13 +37,13 @@ param.spinGoal = -50;         % Desired frisbee spin at max. velocity SHOULD BE 
 
 % Choose what error optimization will try to minimize - velocity, angle,
 % spin, or some combination. Used by objFunc.m
-%param.objective = "V";
+param.objective = "V";
 % param.objective = "A";
 % param.objective = "S";
 % param.objective = "VA";
 % param.objective = "VS";
 % param.objective = "AS";
- param.objective = "VAS";
+%  param.objective = "VAS";
  
 
 % Choose type of control (uncomment desired choice)
@@ -200,5 +203,29 @@ ylabel('v (m/s)')
 subplot(3,2,6)
 polarplot(velAng,velMag)
 title('Velocity Trajectory')
+
+% Display optimal trajectory on xy-plane
+figure();
+plot(x,y,'LineWidth',2)
+hold on;
+plot(x(1),y(1),'Marker','o','Color','green','LineWidth',1)          % Green circle at start point
+plot(x(end),y(end),'Marker','diamond','Color','red','LineWidth',1)  % Red diamond at stop point
+plot(x(maxVelIndex),y(maxVelIndex),'Marker','*','Color','black')     % Cyan asterisk at max vel point
+% Add arrow showing frisbee max velocity & direction to plot
+arrowLen = 0.5*maxVel/param.velGoal;
+quiver(x(maxVelIndex),y(maxVelIndex),...
+    arrowLen*cos(maxVelAng),arrowLen*sin(maxVelAng),...
+    'Color','cyan','LineWidth',1)
+% Set figure limits
+margin = 0.1;
+xlim1 = -param.l1-param.l2-margin;
+xlim2 = param.l1+param.l2+margin;
+ylim1 = -margin;
+ylim2 = param.l1+param.l2+margin;
+xlim([xlim1,xlim2])
+ylim([ylim1, ylim2])
+title('Hand Cartesian Coordinates')
+xlabel('x (m)')
+ylabel('y (m)')
 
 plot_trj_2D(param.dt,theta1_OL,theta2_OL,param)

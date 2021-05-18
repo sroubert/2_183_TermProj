@@ -26,6 +26,17 @@ function [val, gradient] = objFunc(x)
             param.hand_ti=x(7); %start time of wrist motion
             param.hand_T=x(8); %total time for movement
         end
+        
+        % Check for start or end position outside of workspace
+        if (sqrt(param.xi^2+param.yi^2) > param.l1+param.l2) || (sqrt(param.xf^2+param.yf^2) > param.l1+param.l2)
+            disp('Outside of workspace')
+            param.xi
+            param.yi
+            param.xf
+            param.yf
+            val = 10000;
+            return
+        end
     end
         
 
@@ -41,9 +52,13 @@ function [val, gradient] = objFunc(x)
        th3dot=thetaDotMat(:,3);
     end
     % Check for joint limit violations
-    if max(th1) > pi || max(th2-th1) > pi ... %needs updating
+    if max(th1) > pi || max(th2-th1) > pi ...
         || min(th1) < 0 || min(th2-th1) < 0
         val = 10000;
+        return
+    elseif param.dof==3 && (max(th3-th2) > pi/2 || min(th3-th2) < -pi/2)    % Wrist allowed to go +/- 90 deg from forearm
+        val = 10000;
+        return
     else
 
         % Put theta and theta dot into matrix form for
