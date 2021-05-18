@@ -24,8 +24,8 @@ function fmin = optimize()
     thStartMax1 = pi;
     thStartMin2 = 0;
     thStartMax2 = pi;
-    timeTotalMin = 0.1;
-    timeTotalMax = 5;
+    timeTotalMin = 0.05;
+    timeTotalMax = 2;
     
     % chosen somewhat arbitrarily
     xiMin=-.45;

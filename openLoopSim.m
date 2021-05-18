@@ -83,7 +83,7 @@ end
 % xlabel('Time (s)')
 % ylabel('Joint 2 Torque (N-m)')
 % sgtitle('Joint Torques')
-param.tau=[tau1Array,tau2Array];
+%param.tau=[tau1Array,tau2Array];
 
 %integration function using Lagrange
     function stateArmDot = RHS(t,z) %xdot = Ax + Bu

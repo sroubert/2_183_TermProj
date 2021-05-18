@@ -4,7 +4,7 @@ clear all;
 global param control evalCount;
 evalCount = 0;      % Count how many optimization evaluations were run
 
-param.maxEvals=300;
+param.maxEvals=100;
 
 % Using Neville's estimates for limb segment lengths & masses (from
 % "Multi-Joint Inertial Dynamics" reading
@@ -125,9 +125,9 @@ velAng = atan2(ydot,xdot);
 [maxVel, maxVelIndex] = max(velMag)
 maxVelAng = velAng(maxVelIndex)
 if param.dof==2
-    maxVelSpin =  theta2dot_OL(maxVelIndex);
+    maxVelSpin =  theta2dot_OL(maxVelIndex)
 elseif param.dof==3
-    maxVelSpin = theta3dot_OL(maxVelIndex);
+    maxVelSpin = theta3dot_OL(maxVelIndex)
 end
 
 % Display optimal trajectory in joint angles
