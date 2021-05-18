@@ -24,7 +24,7 @@ function [x, y, xdot, ydot] = forwardKinematics(thetaMat, thetaDotMat, param)
         
         theta1 = thetaMat(:,1);
         theta2 = thetaMat(:,2);
-        theta2 = thetaMat(:,3);
+        theta3 = thetaMat(:,3);
         theta1dot = thetaDotMat(:,1);
         theta2dot = thetaDotMat(:,2);
         theta3dot = thetaDotMat(:,3);
