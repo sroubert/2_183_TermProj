@@ -5,7 +5,7 @@ function fmin = optimize()
     global param control
     
     % Maximum number of evaluations before stopping the algorithm
-    opt.maxeval = 600;
+    opt.maxeval = param.maxEvals;
     
     % Relative stopping tolerance (e.g., xtol_rel = .01 means the
     % optimization will stop when a step changes all parameters by less
@@ -24,7 +24,7 @@ function fmin = optimize()
     thStartMax1 = pi;
     thStartMin2 = 0;
     thStartMax2 = pi;
-    timeTotalMin = 0.01;
+    timeTotalMin = 0.1;
     timeTotalMax = 5;
     
     % chosen somewhat arbitrarily

@@ -1,10 +1,10 @@
-function [tarray, theta1_OL, theta2_OL, theta1dot_OL, theta2dot_OL] = openLoopSim()
+function [tarray, thetas, thetadots] = openLoopSim()
 %assumes p is a structure containing the parameters of mass, 
 %centroidal inertias, lengths, and initial states, ie angles and omegas
 %for this also has constant torques
 
 global param control;
-
+addpath('./3DOF')
 time_total = param.time_total;
 
 framessec=60; 
@@ -43,7 +43,7 @@ if control == "hand position"
     th2_0=param.thd(1,2);
     if param.dof==3
        th3_0=param.thd(1,3); 
-       th3dot_0=0
+       th3dot_0=0;
     end
 end
 if param.dof==2
@@ -54,8 +54,13 @@ end
 
 [tarray, statearray] = ode45(@RHS, param.t, state0, options);
 
-theta1_OL = statearray(:,1); theta2_OL = statearray(:,2);
-theta1dot_OL = statearray(:,3); theta2dot_OL = statearray(:,4);
+if param.dof==2
+   thetas=statearray(:,1:2);
+   thetadots=statearray(:,3:4);
+elseif param.dof==3
+   thetas=statearray(:,1:3);
+   thetadots=statearray(:,4:6);    
+end
 
 %remove duplicate time values from tau arrays and sort in ascending order
 %tau1Array = tau1Array(2:end,:);
@@ -85,8 +90,14 @@ param.tau=[tau1Array,tau2Array];
         %unpacking struct
         l1 = param.l1; l2 = param.l2; m1 = param.m1; m2 = param.m2;
 
-        Ic1 = param.Ic1; Ic2 = param.Ic2; 
+        Ic1 = param.Ic1; Ic2 = param.Ic2; Ifris= param.Ifris; mfris=param.mfris;
+        rfris = param.rfris; thFrisOrient = param.thFrisOrient;
 
+        
+        if param.dof==3
+            Ic3=param.Ic3; m3=param.m3; l3=param.l3;
+        end
+        
         %if param.dof == 2
             %tauMag = [param.tau1, param.tau2];
         %elseif param.dof == 3
@@ -109,13 +120,30 @@ param.tau=[tau1Array,tau2Array];
         
         %unpacking state
         
-        th1 = z(1); th2 = z(2); th1dot = z(3); th2dot = z(4);
         
         %EOM from ddthetaXLag files
-        th1dotdot = ddtheta1Lag(Ic1,Ic2,l1,l2,m1,m2,tau1,tau2,th1,th2,th1dot,th2dot);
-        th2dotdot = ddtheta2Lag(Ic1,Ic2,l1,l2,m1,m2,tau1,tau2,th1,th2,th1dot,th2dot);
+        if param.dof==2
+            th1 = z(1); th2 = z(2); th1dot = z(3); th2dot = z(4);
+
+            th1dotdot = ddtheta1_2DOF_fris_Lag(Ic1,Ic2,Ifris,l1,l2,m1,m2,mfris,rfris,tau1,tau2,th1,th2,th1dot,th2dot,thFrisOrient);
+            th2dotdot = ddtheta2_2DOF_fris_Lag(Ic1,Ic2,Ifris,l1,l2,m1,m2,mfris,rfris,tau1,tau2,th1,th2,th1dot,th2dot,thFrisOrient);
+            stateArmDot = [th1dot; th2dot; th1dotdot; th2dotdot];
+        end
         
-        stateArmDot = [th1dot; th2dot; th1dotdot; th2dotdot];
+        
+        if param.dof==3
+            th1 = z(1); th2 = z(2); th1dot = z(4); th2dot = z(5);
+
+            tau3=tau(3);
+            th3=z(3);
+            th3dot=z(6);
+            th1dotdot = ddtheta1_3DOF_fris_Lag(Ic1,Ic2,Ic3,Ifris,l1,l2,l3,m1,m2,m3,mfris,rfris,tau1,tau2,tau3,th1,th2,th3,th1dot,th2dot,th3dot,thFrisOrient);
+            th2dotdot = ddtheta2_3DOF_fris_Lag(Ic1,Ic2,Ic3,Ifris,l1,l2,l3,m1,m2,m3,mfris,rfris,tau1,tau2,tau3,th1,th2,th3,th1dot,th2dot,th3dot,thFrisOrient);
+            th3dotdot = ddtheta3_3DOF_fris_Lag(Ic1,Ic2,Ic3,Ifris,l1,l2,l3,m1,m2,m3,mfris,rfris,tau1,tau2,tau3,th1,th2,th3,th1dot,th2dot,th3dot,thFrisOrient);
+            stateArmDot = [th1dot; th2dot; th3dot; th1dotdot; th2dotdot; th3dotdot];
+        end
+        
+        
     end
 
 end

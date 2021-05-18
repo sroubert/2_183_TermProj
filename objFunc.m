@@ -28,19 +28,33 @@ function [val, gradient] = objFunc(x)
         end
     end
         
-    % Simulate throw using chosen parameters
-    [tarray, theta1_OL, theta2_OL, theta1dot_OL, theta2dot_OL] = openLoopSim();
 
+    % Simulate throw using chosen parameters
+    [tarray, thetaMat, thetaDotMat] = openLoopSim();
+
+    th1=thetaMat(:,1);
+    th2=thetaMat(:,2);
+    th1dot=thetaDotMat(:,1);
+    th2dot=thetaDotMat(:,2);
+    if param.dof==3
+       th3=thetaMat(:,3);
+       th3dot=thetaDotMat(:,3);
+    end
     % Check for joint limit violations
-    if max(theta1_OL) > pi || max(theta2_OL) > pi ...
-        || min(theta1_OL) < 0 || min(theta2_OL) < 0
+    if max(th1) > pi || max(th2-th1) > pi ... %needs updating
+        || min(th1) < 0 || min(th2-th1) < 0
         val = 10000;
     else
 
         % Put theta and theta dot into matrix form for
         % forwardKinematics function
-        thetaMat = [theta1_OL, theta2_OL];
-        thetaDotMat = [theta1dot_OL, theta2dot_OL];
+%         if param.dof==2
+%             thetaMat = [theta1_OL, theta2_OL];
+%             thetaDotMat = [theta1dot_OL, theta2dot_OL];
+%         elseif param.dof==3
+%             thetaMat = [theta1_OL, theta2_OL, theta3_OL];
+%             thetaDotMat = [theta1dot_OL, theta2dot_OL, theta3dot_OL];
+%         end
 
         [handX, handY, handXdot, handYdot] =...
             forwardKinematics(thetaMat, thetaDotMat, param);
@@ -55,7 +69,11 @@ function [val, gradient] = objFunc(x)
         maxVelAng = atan2(handYdot(maxVelIndex),handXdot(maxVelIndex));
         
         % Obtain frisbee spin at time of max. velocity
-        maxVelSpin = 0; % TBD
+        if param.dof==2
+            maxVelSpin =  th2dot(maxVelIndex);
+        elseif param.dof==3
+            maxVelSpin = th3dot(maxVelIndex);
+        end
 
         % Compute cost function value based on weighted RMSE of desired
         % frisbee characteristics
@@ -65,7 +83,7 @@ function [val, gradient] = objFunc(x)
             wVel = 0;
         end
         if contains(param.objective, "A")   % frisbee release angle
-            wAng = 1;
+            wAng = 0.1;
         else
             wAng = 0;
         end
