@@ -38,11 +38,11 @@ param.spinGoal = -50;         % Desired frisbee spin at max. velocity SHOULD BE 
 
 % Choose what error optimization will try to minimize - velocity, angle,
 % spin, or some combination. Used by objFunc.m
-%param.objective = "V"; velocity
-% param.objective = "A"; angle
-% param.objective = "S"; spin
+param.objective = "V"; %velocity
+% param.objective = "A";% angle
+% param.objective = "S";% spin
 % param.objective = "VA";
- param.objective = "VS";
+% param.objective = "VS";
 % param.objective = "AS";
 %  param.objective = "VAS";
  
@@ -110,19 +110,6 @@ else
         param.time_total = 0.5;
     end
 end
-
-%% saving outputs of optimization
-
-currentFolder = pwd; %string of current folder
-analysisFolder = fullfile(pwd, 'analysis');
-
-fileName = strcat(string(param.dof),'DOF','_','obj',param.objective, ...
-    '_','vel',string(param.velGoal),'_','ang',string(param.angGoal), ...
-    '_','spin',string(param.spinGoal), '.mat');
-
-fileToSave = fullfile(analysisFolder,fileName);
-
-save(fileToSave,param)
 
 
 %% simulate
@@ -251,6 +238,23 @@ ylim([ylim1, ylim2])
 title('Hand Cartesian Coordinates')
 xlabel('x (m)')
 ylabel('y (m)')
+
+%% saving outputs of optimization
+
+currentFolder = pwd; %string of current folder
+analysisFolder = fullfile(pwd, 'analysis');
+
+fileName = strcat(string(param.dof),'DOF','_',...
+    'frisOr',string(param.thFrisOrient),...
+    '_','obj',param.objective, ...
+    '_','vel',string(param.velGoal),'_','ang',string(param.angGoal), ...
+    '_','spin',string(param.spinGoal), '.mat');
+
+fileToSave = fullfile(analysisFolder,fileName);
+
+save(fileToSave,'param')
+
+simOutput = [maxVel, maxVelAng
 
 %% animating
 

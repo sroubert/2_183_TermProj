@@ -1,8 +1,5 @@
-close all;
-clear all;
-%% initialize
 
-global param control evalCount;
+global control evalCount param;
 evalCount = 0;      % Count how many optimization evaluations were run
 
 param.maxEvals=100;
@@ -29,23 +26,6 @@ param.mfris=.175; %grams
 param.rfris=.274/2; %m
 param.Ifris=.6*param.mfris*param.rfris^2; %estimation of I. mostly a disc, but some mass closer to ring;
 
-param.thFrisOrient=pi;
-
-% Set goals for frisbee behavior (linear velocity, direction, and spin)
-param.velGoal = 14;          % Desired maximum frisbee linear velocity
-param.angGoal = pi/4;       % Desired frisbee direction at max. velocity
-param.spinGoal = -50;         % Desired frisbee spin at max. velocity SHOULD BE NEGATIVE  
-
-% Choose what error optimization will try to minimize - velocity, angle,
-% spin, or some combination. Used by objFunc.m
-param.objective = "V"; %velocity
-% param.objective = "A";% angle
-% param.objective = "S";% spin
-% param.objective = "VA";
-% param.objective = "VS";
-% param.objective = "AS";
-%  param.objective = "VAS";
- 
 
 % Choose type of control (uncomment desired choice)
 %control = "torque";
@@ -66,7 +46,6 @@ param.tau_1_max=50;
 param.tau_2_max=30;
 param.tau_3_max=20;
 
-param.dof=3;
 
 param.K=[29.5,14.3;14.3,39.3]*2;
 if param.dof==3
@@ -111,7 +90,6 @@ else
     end
 end
 
-
 %% simulate
 
 % Simulate trajectory using optimal parameters
@@ -142,103 +120,6 @@ elseif param.dof==3
     maxVelSpin = theta3dot_OL(maxVelIndex)
 end
 
-%% plotting
-
-% Display optimal trajectory in joint angles
-figure
-subplot(2,2,1)
-plot(tarray,rad2deg(theta1_OL))
-hold on
-plot(param.t,rad2deg(param.thd(:,1)),'r--')
-title('theta_{1}')
-xlabel('time (sec)')
-ylabel('theta1 (deg)')
-
-subplot(2,2,2)
-plot(tarray,rad2deg(theta2_OL))
-hold on
-plot(param.t,rad2deg(param.thd(:,2)),'r--')
-title('theta_{2}')
-xlabel('time (sec)')
-ylabel('theta2 (deg)')
-
-subplot(2,2,3)
-plot(tarray,rad2deg(theta1dot_OL))
-title('theta_{1} dot')
-xlabel('time (sec)')
-ylabel('theta1dot (deg/s)')
-
-
-subplot(2,2,4)
-plot(tarray,rad2deg(theta2dot_OL))
-title('theta_{2} dot')
-xlabel('time (sec)')
-ylabel('theta2dot (deg/s)')
-
-% Display optimal trajectory in Cartesian coordinates
-figure
-subplot(3,2,1)
-plot(tarray,x)
-hold on
-plot(param.t,param.x(:,1),'r--')
-title('Hand x-coordinates')
-xlabel('time (sec)')
-ylabel('x (m)')
-
-subplot(3,2,2)
-plot(tarray,y)
-hold on
-plot(param.t,param.x(:,2),'r--')
-title('Hand y-coordinates')
-xlabel('time (sec)')
-ylabel('y (m)')
-
-subplot(3,2,3)
-plot(tarray,xdot)
-title('Hand x-velocity (m/s)')
-xlabel('time (sec)')
-ylabel('v_{x} (m/s)')
-
-subplot(3,2,4)
-plot(tarray,ydot)
-title('Hand y-velocity (m/s)')
-xlabel('time (sec)')
-ylabel('v_{y} (m/s)')
-
-subplot(3,2,5)
-plot(tarray,velMag)
-title('Tangential velocity (m/s)')
-xlabel('time (sec)')
-ylabel('v (m/s)')
-
-subplot(3,2,6)
-polarplot(velAng,velMag)
-title('Velocity Trajectory')
-
-% Display optimal trajectory on xy-plane
-figure();
-plot(x,y,'LineWidth',2)
-hold on;
-plot(x(1),y(1),'Marker','o','Color','green','LineWidth',1)          % Green circle at start point
-plot(x(end),y(end),'Marker','diamond','Color','red','LineWidth',1)  % Red diamond at stop point
-plot(x(maxVelIndex),y(maxVelIndex),'Marker','*','Color','black')     % Cyan asterisk at max vel point
-% Add arrow showing frisbee max velocity & direction to plot
-arrowLen = 0.5*maxVel/param.velGoal;
-quiver(x(maxVelIndex),y(maxVelIndex),...
-    arrowLen*cos(maxVelAng),arrowLen*sin(maxVelAng),...
-    'Color','cyan','LineWidth',1)
-% Set figure limits
-margin = 0.1;
-xlim1 = -param.l1-param.l2-margin;
-xlim2 = param.l1+param.l2+margin;
-ylim1 = -margin;
-ylim2 = param.l1+param.l2+margin;
-xlim([xlim1,xlim2])
-ylim([ylim1, ylim2])
-title('Hand Cartesian Coordinates')
-xlabel('x (m)')
-ylabel('y (m)')
-
 %% saving outputs of optimization
 
 currentFolder = pwd; %string of current folder
@@ -259,6 +140,4 @@ simOutput = [maxVel, maxVelAng, maxVelSpin];
 fileNameOut = fullfile(analysisFolder,strcat('OUTPUT',fileName));
 
 save(fileNameOut,'simOutput')
-%% animating
 
-plot_trj_2D(param.dt,theta1_OL,theta2_OL,param)
