@@ -70,6 +70,10 @@ param.dof=3;
 param.K=[29.5,14.3;14.3,39.3]*2;
 if param.dof==3
    param.K=[param.K,[0;0];  0 0 30];
+   
+   param.l2=param.l2-param.l3; %updating forearm mass, lengths and inertias
+   param.m2=param.m2-param.m3; %based on 3 dof with distribution to wrist
+   param.I2=1/12*param.m2*param.l2^2;
 end
 
 param.B=param.K*.1;
