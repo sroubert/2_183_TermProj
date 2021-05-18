@@ -38,18 +38,27 @@ function tau = torqueFromImpedance(z,ti,p)
     
     K=p.K;
     B=p.B;   
-    
+
     tau=K*(th0_t-th)-B*dth; 
+
+    tau_1_limit=p.tau_1_max;
+    tau_2_limit=p.tau_2_max;
+    tau_3_limit=p.tau_3_max;
     
-    tau_1_limit=50;
-    tau_2_limit=30;
-    tau_3_limit=20;
     
     if abs(tau(1))>tau_1_limit
-        tau=[tau_1_limit*sign(tau(1));tau(2)];
+        if p.dof==2
+            tau=[tau_1_limit*sign(tau(1));tau(2)];
+        else
+            tau=[tau_1_limit*sign(tau(1));tau(2);tau(3)];
+        end
     end 
     if abs(tau(2))>tau_2_limit
-        tau=[tau(1);tau_2_limit*sign(tau(2))];
+        if p.dof==2
+            tau=[tau(1);tau_2_limit*sign(tau(2))];
+        else
+            tau=[tau(1);tau_2_limit*sign(tau(2));tau(3)];
+        end
     end
     
     if p.dof==3
