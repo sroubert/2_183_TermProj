@@ -23,10 +23,9 @@ function [thetas]=getThetasFromXY(xy,v,a,t,params)
         th3_initial=pi/4; %relative coords
         l3=params.l3;
         delta_th3=params.delta_th3;
-        ti=params.hand_ti;
-        t_tot=params.hand_T;
+        D=params.time_total;
         th3=zeros(length(t),1);
-        theta_min_jerk=@(t,A,D) 6*A*(t/D)^5-15*A*(t/D)^4 +10*A*(t/D)^3;
+        theta_min_jerk=@(t,A) 6*A*(t/D)^5-15*A*(t/D)^4 +10*A*(t/D)^3;
         
         for i=1:length(t)%same approach as 2 dof
             x=xy(i,1);
@@ -37,16 +36,9 @@ function [thetas]=getThetasFromXY(xy,v,a,t,params)
             
             %now do th3
             tt=t(i);
-            if tt<ti %if submovement hasnt started yet, 
-                th3(i)= th2(i)+th3_initial; %absolute coords
-                continue
-            end
-            if tt>(ti+t_tot)
-                th3(i)=th2(i)+th3_initial + delta_th3; %if over time, keep same wrist angle;
-               continue 
-            end
 
-            th3(i)=th2(i)+th3_initial+theta_min_jerk(tt,delta_th3,t_tot);
+            th3(i)=th2(i)+th3_initial+theta_min_jerk(tt,delta_th3);
+
         end
         thetas=[th1,th2,th3];
     end

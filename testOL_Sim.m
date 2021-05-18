@@ -28,7 +28,7 @@ param.mfris=.175; %grams
 param.rfris=.274/2; %m
 param.Ifris=.6*param.mfris*param.rfris^2; %estimation of I. mostly a disc, but some mass closer to ring;
 
-param.thFrisOrient=pi/2;
+param.thFrisOrient=pi;
 
 % Set goals for frisbee behavior (linear velocity, direction, and spin)
 param.velGoal = 14;          % Desired maximum frisbee linear velocity
@@ -37,11 +37,11 @@ param.spinGoal = -50;         % Desired frisbee spin at max. velocity SHOULD BE 
 
 % Choose what error optimization will try to minimize - velocity, angle,
 % spin, or some combination. Used by objFunc.m
-param.objective = "V";
+%param.objective = "V";
 % param.objective = "A";
 % param.objective = "S";
 % param.objective = "VA";
-% param.objective = "VS";
+ param.objective = "VS";
 % param.objective = "AS";
 %  param.objective = "VAS";
  

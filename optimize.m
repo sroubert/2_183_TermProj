@@ -62,8 +62,8 @@ function fmin = optimize()
             opt.lower_bounds = [xiMin, yiMin, xfMin, yfMin, timeTotalMin];
             opt.upper_bounds = [xiMax, yiMax, xfMax, yfMax, timeTotalMax];
         elseif param.dof==3
-            opt.lower_bounds = [xiMin, yiMin, xfMin, yfMin, timeTotalMin, -pi/2,0,timeTotalMin];
-            opt.upper_bounds = [xiMax, yiMax, xfMax, yfMax, timeTotalMax, pi/4,timeTotalMax-timeTotalMin,timeTotalMax];
+            opt.lower_bounds = [xiMin, yiMin, xfMin, yfMin, timeTotalMin, -pi/2];
+            opt.upper_bounds = [xiMax, yiMax, xfMax, yfMax, timeTotalMax, pi/4];
 
         end
     end
@@ -83,7 +83,7 @@ function fmin = optimize()
         elseif param.dof==3
             init_guess = [(xiMax-xiMin)/2, (yiMax-yiMin)/2, (xfMax-xfMin)/2,...
             (yfMax-yfMin)/2, (timeTotalMax-timeTotalMin)/2, ...
-            -pi/4, (timeTotalMax-timeTotalMin)/4,(timeTotalMax-timeTotalMin)/2]; %delta_th3, ti, T
+            -pi/4]; %delta_th3
         end
     end
     
@@ -113,7 +113,5 @@ function fmin = optimize()
         param.time_total = xopt(5);
         if param.dof==3
            param.delta_th3=xopt(6);
-           param.hand_ti=xopt(7);
-           param.hand_T=xopt(8);
         end
     end

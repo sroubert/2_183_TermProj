@@ -23,8 +23,6 @@ function [val, gradient] = objFunc(x)
         param.time_total = x(5);
         if param.dof==3
             param.delta_th3=x(6); %distance traveled of wrist
-            param.hand_ti=x(7); %start time of wrist motion
-            param.hand_T=x(8); %total time for movement
         end
         
         % Check for start or end position outside of workspace
@@ -98,7 +96,7 @@ function [val, gradient] = objFunc(x)
             wVel = 0;
         end
         if contains(param.objective, "A")   % frisbee release angle
-            wAng = 0.1;
+            wAng = 1;
         else
             wAng = 0;
         end

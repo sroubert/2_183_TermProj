@@ -47,7 +47,7 @@ if control == "hand position"
     end
 end
 if param.dof==2
-state0 = [th1_0, th2_0, th1dot_0, th2dot_0];
+    state0 = [th1_0, th2_0, th1dot_0, th2dot_0];
 elseif param.dof==3
     state0=[th1_0 th2_0 th3_0 th1dot_0 th2dot_0 th3dot_0];
 end
