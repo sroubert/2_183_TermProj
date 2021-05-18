@@ -4,6 +4,8 @@ clear all;
 global param control evalCount;
 evalCount = 0;      % Count how many optimization evaluations were run
 
+param.maxEvals=300;
+
 % Using Neville's estimates for limb segment lengths & masses (from
 % "Multi-Joint Inertial Dynamics" reading
 param.m1 = 2.52;
@@ -15,20 +17,31 @@ param.Ic2 = 1/12*param.m2*param.l2^2;
 param.th1dot_0 = 0;
 param.th2dot_0 = 0;
 
+param.l3=.06;
+param.m3=.24; %estimation based on l3/l2*m2
+param.Ic3=1/12*param.m3*param.l3^2;
+
+param.mfris=.175; %grams
+param.rfris=.274/2; %m
+param.Ifris=.6*param.mfris*param.rfris^2; %estimation of I. mostly a disc, but some mass closer to ring;
+
+param.thFrisOrient=pi/2;
+
 % Set goals for frisbee behavior (linear velocity, direction, and spin)
-param.velGoal = 10;          % Desired maximum frisbee linear velocity
+param.velGoal = 14;          % Desired maximum frisbee linear velocity
 param.angGoal = pi/4;       % Desired frisbee direction at max. velocity
-param.spinGoal = 0;         % Desired frisbee spin at max. velocity
+param.spinGoal = -50;         % Desired frisbee spin at max. velocity SHOULD BE NEGATIVE  
 
 % Choose what error optimization will try to minimize - velocity, angle,
 % spin, or some combination. Used by objFunc.m
-param.objective = "V";
+%param.objective = "V";
 % param.objective = "A";
 % param.objective = "S";
 % param.objective = "VA";
 % param.objective = "VS";
 % param.objective = "AS";
-% param.objective = "VAS";
+ param.objective = "VAS";
+ 
 
 % Choose type of control (uncomment desired choice)
 %control = "torque";
@@ -45,9 +58,16 @@ param.xf = 0;
 param.yf = 0;
 param.time_total = 0;
 
-param.dof=2;
+param.tau_1_max=50;
+param.tau_2_max=30;
+param.tau_3_max=20;
+
+param.dof=3;
 
 param.K=[29.5,14.3;14.3,39.3]*2;
+if param.dof==3
+   param.K=[param.K,[0;0];  0 0 30];
+end
 
 param.B=param.K*.1;
 
@@ -83,12 +103,17 @@ else
 end
 
 % Simulate trajectory using optimal parameters
-[tarray, theta1_OL, theta2_OL, theta1dot_OL, theta2dot_OL] = ...
+[tarray, thetaMat, thetaDotMat] = ...
     openLoopSim();
 
-% Put joint angles and velocities in arrays
-thetaMat = [theta1_OL, theta2_OL];
-thetaDotMat = [theta1dot_OL, theta2dot_OL];
+theta1_OL=thetaMat(:,1);
+theta2_OL=thetaMat(:,2);
+theta1dot_OL=thetaDotMat(:,1);
+theta2dot_OL=thetaDotMat(:,2);
+if param.dof==3
+   theta3_OL=thetaMat(:,3);
+   theta3dot_OL=thetaDotMat(:,3);
+end
 
 % Convert trajectory to Cartesian space
 [x, y, xdot, ydot] = forwardKinematics(thetaMat, thetaDotMat, param);
@@ -99,17 +124,26 @@ velAng = atan2(ydot,xdot);
 % Return achieved frisbee behavior
 [maxVel, maxVelIndex] = max(velMag)
 maxVelAng = velAng(maxVelIndex)
+if param.dof==2
+    maxVelSpin =  theta2dot_OL(maxVelIndex);
+elseif param.dof==3
+    maxVelSpin = theta3dot_OL(maxVelIndex);
+end
 
 % Display optimal trajectory in joint angles
 figure
 subplot(2,2,1)
 plot(tarray,rad2deg(theta1_OL))
+hold on
+plot(param.t,rad2deg(param.thd(:,1)),'r--')
 title('theta_{1}')
 xlabel('time (sec)')
 ylabel('theta1 (deg)')
 
 subplot(2,2,2)
 plot(tarray,rad2deg(theta2_OL))
+hold on
+plot(param.t,rad2deg(param.thd(:,2)),'r--')
 title('theta_{2}')
 xlabel('time (sec)')
 ylabel('theta2 (deg)')
