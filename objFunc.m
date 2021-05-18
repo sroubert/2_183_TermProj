@@ -91,17 +91,17 @@ function [val, gradient] = objFunc(x)
         % Compute cost function value based on weighted RMSE of desired
         % frisbee characteristics
         if contains(param.objective, "V")   % frisbee velocity
-            wVel = 1;
+            wVel = 1/param.velGoal^2; %normalizing
         else
             wVel = 0;
         end
         if contains(param.objective, "A")   % frisbee release angle
-            wAng = 1;
+            wAng = 1/(pi/2)^2; %approximate because angGoal can = 0
         else
             wAng = 0;
         end
         if contains(param.objective, "S")   % frisbee spin
-            wSpin = 1;
+            wSpin = 1/param.spinGoal^2; %normalizing
         else
             wSpin = 0;
         end
