@@ -38,11 +38,11 @@ param.spinGoal = -50;         % Desired frisbee spin at max. velocity SHOULD BE 
 
 % Choose what error optimization will try to minimize - velocity, angle,
 % spin, or some combination. Used by objFunc.m
-param.objective = "V"; %velocity
-% param.objective = "A";% angle
-% param.objective = "S";% spin
+%param.objective = "V"; velocity
+% param.objective = "A"; angle
+% param.objective = "S"; spin
 % param.objective = "VA";
-% param.objective = "VS";
+ param.objective = "VS";
 % param.objective = "AS";
 %  param.objective = "VAS";
  
@@ -122,7 +122,7 @@ fileName = strcat(string(param.dof),'DOF','_','obj',param.objective, ...
 
 fileToSave = fullfile(analysisFolder,fileName);
 
-save(fileToSave,'param')
+save(fileToSave,param)
 
 
 %% simulate

@@ -1,6 +1,7 @@
 close all
 clear all
 %script for equations of motion
+%MAIN DERIVATION
 
 
 syms th1 th2 th3 th1dot th2dot th3dot th1dotdot th2dotdot th3dotdot real

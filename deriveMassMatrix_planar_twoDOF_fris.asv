@@ -1,8 +1,0 @@
-function [M_matrix] = deriveMassMatrix_planar_twoDOF_fris(m1, Ic1, m2, Ic2, ...
-    mfris, Ifris, rfris, thFrisOrient)
-
-rf_2
-
-M_matrix = diag( [m1 m1 Ic1 m2 m2 Ic2] );
-
-end
