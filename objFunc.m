@@ -27,11 +27,11 @@ function [val, gradient] = objFunc(x)
         
         % Check for start or end position outside of workspace
         if (sqrt(param.xi^2+param.yi^2) > param.l1+param.l2) || (sqrt(param.xf^2+param.yf^2) > param.l1+param.l2)
-            disp('Outside of workspace')
-            param.xi
-            param.yi
-            param.xf
-            param.yf
+%             disp('Outside of workspace')
+%             param.xi;
+%             param.yi;
+%             param.xf;
+%             param.yf;
             val = 10000;
             return
         end

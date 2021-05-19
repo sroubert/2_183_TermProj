@@ -2,7 +2,7 @@
 global control evalCount param;
 evalCount = 0;      % Count how many optimization evaluations were run
 
-param.maxEvals=100;
+param.maxEvals=500;
 
 param.algorithm = NLOPT_GN_DIRECT_L;
 % param.algorithm = NLOPT_GN_CRS2_LM;
@@ -70,9 +70,9 @@ if runOptimization
     fmin = optimize();
 
     % Display results of optimization
-    param       % Optimal parameters
-    fmin        % Minimum objective function value
-    evalCount   % Number of optimization evaluations
+    param;       % Optimal parameters
+    fmin;        % Minimum objective function value
+    evalCount;   % Number of optimization evaluations
 else
     % Manually assign parameters for simulation
     if control == "torque"
@@ -123,7 +123,7 @@ end
 %% saving outputs of optimization
 
 currentFolder = pwd; %string of current folder
-analysisFolder = fullfile(pwd, 'analysis');
+analysisFolder = fullfile(pwd, 'analysis_500');
 
 fileName = strcat(string(param.dof),'DOF','_',...
     'frisOr',string(param.thFrisOrient),...
