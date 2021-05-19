@@ -13,9 +13,11 @@ end
 MATfiles(deleteArray) = [];
 
 % Create table to hold outputs
-analysisTypes = {'string','double','double','double'};
-analysisNames = {'Simulation','Velocity', 'Angle', 'Spin'};
-outputTable = table('Size',[length(MATfiles), 4],...
+analysisTypes = {'string','double','double','double','double','double',...
+    'double','double','double','double'};
+analysisNames = {'Simulation','Velocity','Angle','Spin','DOF','Fris Orientation',...
+    'Obj Func','Vel Goal','Ang Goal','Spin Goal'};
+outputTable = table('Size',[length(MATfiles), 10],...
             'VariableTypes',analysisTypes,'VariableNames',analysisNames);
 
 % Put simulation outputs into table
@@ -25,9 +27,17 @@ for i = 1:length(MATfiles)
    name = convertCharsToStrings(name);
    
    outputTable{i,1} = name;
-   outputTable{i,2} = simOutput(1);
-   outputTable{i,3} = simOutput(2);
-   outputTable{i,4} = simOutput(3);
+   outputTable{i,2} = simOutput(1);     % release velocity
+   outputTable{i,3} = simOutput(2);     % release angle
+   outputTable{i,4} = simOutput(3);     % release spin
+   outputTable{i,5} = str2double(extractBetween(name,"OUTPUT","DOF"));  % DOF
+   outputTable{i,6} = str2double(extractBetween(name,"frisOr","_obj")); % frisbee orientation
+   outputTable{i,7} = str2double(extractBetween(name,"_obj","_vel"));   % objective function
+   outputTable{i,8} = str2double(extractBetween(name,"_vel","_ang"));   % velocity goal
+   outputTable{i,9} = str2double(extractBetween(name,"_ang","_spin"));  % angle goal
+   outputTable{i,10} = str2double(extractBetween(name,"_spin",".mat")); % spin goal
+   
+   
 end
 
 % Write table to excel file with current date & time in name
