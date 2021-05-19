@@ -20,7 +20,8 @@ param.objective = "V"; %velocity
 % param.objective = "VAS";
 
 DOF = [2,3];
-Obj = ["V", "VA", "VS", "AS", "VAS", "A", "S",];
+%Obj = ["V", "VA", "VS", "AS", "VAS", "A", "S",];
+Obj = ["AS", "A", "S"];
 angGoal = [0 pi/4 pi/2 3*pi/4];
 thFrisOrient = [pi/2, pi/4, 0];
 
@@ -28,11 +29,13 @@ for fr = 1:length(thFrisOrient)
     for ang = 1:length(angGoal)
         for o = 1:length(Obj)
             for d = 1:length(DOF)
-                param.dof= DOF(d)
-                param.objective = Obj(o)
-                param.angGoal = angGoal(ang)
+                tic
+                param.dof= DOF(d);
+                param.objective = Obj(o);
+                param.angGoal = angGoal(ang);
                 param.thFrisOrient = thFrisOrient(fr)
                 OLsim_toLoop()
+                toc
             end
         end
     end

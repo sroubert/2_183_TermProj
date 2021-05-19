@@ -1,7 +1,7 @@
 close all; clear all;
 
 % Put names of all files in analysis folder into structure MATfiles
-MATfiles = dir('analysis/*.mat');
+MATfiles = dir('analysis_1000/*.mat');
 
 % Remove rows with file names that don't start with "OUTPUT"
 deleteArray = [];
@@ -23,7 +23,7 @@ outputTable = table('Size',[length(MATfiles), 10],...
 % Put simulation outputs into table
 for i = 1:length(MATfiles)
    name = MATfiles(i).name;
-   load(strcat('analysis/',name))
+   load(strcat('analysis_1000/',name))
    name = convertCharsToStrings(name);
    
    outputTable{i,1} = name;
@@ -41,5 +41,5 @@ for i = 1:length(MATfiles)
 end
 
 % Write table to excel file with current date & time in name
-filename = strcat("analysis/output_",string(datetime('now','Format','yyyy-MM-dd_HH-mm-ss')),".xlsx");
+filename = strcat("analysis_1000/output_",string(datetime('now','Format','yyyy-MM-dd_HH-mm-ss')),".xlsx");
 writetable(outputTable,filename)

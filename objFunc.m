@@ -2,7 +2,7 @@ function [val, gradient] = objFunc(x)
 
     global param control evalCount;
 
-    evalCount = evalCount + 1
+    evalCount = evalCount + 1;
     
     if control == "torque"
         % Torque control

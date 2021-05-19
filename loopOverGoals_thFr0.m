@@ -32,7 +32,9 @@ for fr = 1:length(thFrisOrient)
                 param.objective = Obj(o);
                 param.angGoal = angGoal(ang);
                 param.thFrisOrient = thFrisOrient(fr);
+                tic
                 OLsim_toLoop()
+                toc
             end
         end
     end
