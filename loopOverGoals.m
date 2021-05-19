@@ -21,10 +21,10 @@ param.objective = "V"; %velocity
 
 DOF = [2,3];
 %Obj = ["V", "VA", "VS", "AS", "VAS", "A", "S",];
-Obj = ["V", "VA", "VS", "VAS"];
-angGoal = flip([0 pi/4 pi/2 3*pi/4]);
-%thFrisOrient = [pi/2, pi/4, 0];
-thFrisOrient = [0];
+Obj = ["V", "VA", "VS"];
+%Obj = ["AS", "VAS", "A", "S",];
+angGoal = ([0 pi/4 pi/2 3*pi/4]);
+thFrisOrient = [pi/2, pi/4, 0];
 
 for fr = 1:length(thFrisOrient)
     for ang = 1:length(angGoal)

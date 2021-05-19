@@ -4,8 +4,8 @@ evalCount = 0;      % Count how many optimization evaluations were run
 
 param.maxEvals=1000;
 
-param.algorithm = NLOPT_GN_DIRECT_L;
-% param.algorithm = NLOPT_GN_CRS2_LM;
+%param.algorithm = NLOPT_GN_DIRECT_L;
+param.algorithm = NLOPT_GN_CRS2_LM;
 
 % Using Neville's estimates for limb segment lengths & masses (from
 % "Multi-Joint Inertial Dynamics" reading
@@ -123,7 +123,7 @@ end
 %% saving outputs of optimization
 
 currentFolder = pwd; %string of current folder
-analysisFolder = fullfile(pwd, 'analysis_1000');
+analysisFolder = fullfile(pwd, 'analysis_1000_otherAlg');
 
 fileName = strcat(string(param.dof),'DOF','_',...
     'frisOr',string(param.thFrisOrient),...
