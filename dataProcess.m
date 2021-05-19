@@ -14,7 +14,7 @@ MATfiles(deleteArray) = [];
 
 % Create table to hold outputs
 analysisTypes = {'string','double','double','double','double','double',...
-    'double','double','double','double'};
+    'string','double','double','double'};
 analysisNames = {'Simulation','Velocity','Angle','Spin','DOF','Fris Orientation',...
     'Obj Func','Vel Goal','Ang Goal','Spin Goal'};
 outputTable = table('Size',[length(MATfiles), 10],...
@@ -32,7 +32,7 @@ for i = 1:length(MATfiles)
    outputTable{i,4} = simOutput(3);     % release spin
    outputTable{i,5} = str2double(extractBetween(name,"OUTPUT","DOF"));  % DOF
    outputTable{i,6} = str2double(extractBetween(name,"frisOr","_obj")); % frisbee orientation
-   outputTable{i,7} = str2double(extractBetween(name,"_obj","_vel"));   % objective function
+   outputTable{i,7} = extractBetween(name,"_obj","_vel");   % objective function
    outputTable{i,8} = str2double(extractBetween(name,"_vel","_ang"));   % velocity goal
    outputTable{i,9} = str2double(extractBetween(name,"_ang","_spin"));  % angle goal
    outputTable{i,10} = str2double(extractBetween(name,"_spin",".mat")); % spin goal
