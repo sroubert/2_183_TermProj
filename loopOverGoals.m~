@@ -17,21 +17,21 @@ param.objective = "V"; %velocity
 % param.objective = "VA";
 % param.objective = "VS";
 % param.objective = "AS";
-% param.objective = "VAS";
+%  param.objective = "VAS";
 
 DOF = [2,3];
 Obj = ["V", "VA", "VS", "AS", "VAS", "A", "S",];
 angGoal = [0 pi/4 pi/2 3*pi/4];
-thFrisOrient = [pi/2, pi/4, 0];
+thFrisOrient = [pi/2, 0];
 
 for fr = 1:length(thFrisOrient)
     for ang = 1:length(angGoal)
         for o = 1:length(Obj)
             for d = 1:length(DOF)
-                param.dof= DOF(d)
-                param.objective = Obj(o)
-                param.angGoal = angGoal(ang)
-                param.thFrisOrient = thFrisOrient(fr)
+                param.dof= DOF(d);
+                param.objective = Obj(o);
+                param.angGoal = angGoal(ang);
+                param.thFrisOrient = thFrisOrient(fr);
                 OLsim_toLoop()
             end
         end
