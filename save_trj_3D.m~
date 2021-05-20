@@ -11,9 +11,9 @@ function [] = save_trj_3D(dt,ths,params,file_name)
     for k =1:length(th1s)
         th1=th1s(k);
         th2=th2s(k);
-        th3=th3s(k);
-        [armx,army]=get_arm(th1,th2,th3,params);
-        [discx,discy]=get_disc(th1,th2,th3,params);
+        
+        [armx,army]=get_arm(th1,th2,params);
+        [discx,discy]=get_disc(th1,th2,params);
         tmp=plot(armx,army,'k','LineWidth',2);
         tmp2=plot(discx,discy,'r','LineWidth',2);
 
@@ -24,7 +24,7 @@ function [] = save_trj_3D(dt,ths,params,file_name)
     end
     hold off
     v=VideoWriter(file_name,'MPEG-4');
-    v.FrameRate = 60;%1/dt;
+    v.FrameRate = 1/dt;
     open(v)
     writeVideo(v,M)
     %v

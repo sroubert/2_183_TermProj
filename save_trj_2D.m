@@ -22,7 +22,7 @@ function [] = save_trj_2D(dt,ths,params,file_name)
     end
     hold off
     v=VideoWriter(file_name,'MPEG-4');
-    v.FrameRate = 1/dt;
+    v.FrameRate = 60;%1/dt;
     open(v)
     writeVideo(v,M)
     %v
