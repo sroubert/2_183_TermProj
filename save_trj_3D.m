@@ -1,4 +1,4 @@
-function [] = save_trj_2D(dt,ths,params,file_name)
+function [] = save_trj_3D(dt,ths,params,file_name)
     h=figure;
     axes 
     axis equal
@@ -6,12 +6,14 @@ function [] = save_trj_2D(dt,ths,params,file_name)
     ylim([-.2,0.8])
     th1s=ths(:,1);
     th2s=ths(:,2);
+    th3s=ths(:,3);
     hold on
     for k =1:length(th1s)
         th1=th1s(k);
         th2=th2s(k);
-        [armx,army]=get_arm(th1,th2,params);
-        [discx,discy]=get_disc(th1,th2,params);
+        th3=th3s(k);
+        [armx,army]=get_arm(th1,th2,th3,params);
+        [discx,discy]=get_disc(th1,th2,th3,params);
         tmp=plot(armx,army,'k','LineWidth',2);
         tmp2=plot(discx,discy,'r','LineWidth',2);
 
@@ -29,21 +31,22 @@ function [] = save_trj_2D(dt,ths,params,file_name)
     close(v)
 end
 
-function [x,y]=get_arm(th1,th2,params)
+function [x,y]=get_arm(th1,th2,th3,params)
     %CURRENTLY ASSUMES ABSOLUTE ANGLES
     l1=params.l1;
     l2=params.l2;
-    x=[0;l1*cos(th1);l1*cos(th1)+l2*cos(th2)];
-    y=[0;l1*sin(th1);l1*sin(th1)+l2*sin(th2)];
+    l3=params.l3;
+    x=[0;l1*cos(th1);l1*cos(th1)+l2*cos(th2);l1*cos(th1)+l2*cos(th2)+l3*cos(th3)];
+    y=[0;l1*sin(th1);l1*sin(th1)+l2*sin(th2);l1*sin(th1)+l2*sin(th2)+l3*sin(th3)];
 end
 
-function [x,y]=get_disc(th1,th2,params)
+function [x,y]=get_disc(th1,th2,th3,params)
     l1=params.l1;
-    l2=params.l2;    
+    l2=params.l2;
+    l3=params.l3;
     r=0.137; %m
-    
-    xc=l1*cos(th1)+l2*cos(th2) + r*cos(th2+params.thFrisOrient); %hand position plus offset
-    yc=l1*sin(th1)+l2*sin(th2) + r*sin(th2+params.thFrisOrient);
+    xc=l1*cos(th1)+l2*cos(th2)+l3*cos(th3) + r*cos(th3+params.thFrisOrient); %hand position plus offset
+    yc=l1*sin(th1)+l2*sin(th2)+l3*sin(th3) + r*sin(th3+params.thFrisOrient);
 
     num=100;
 
